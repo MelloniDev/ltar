@@ -41,14 +41,6 @@ handleParams(){
                 compression="xz"
                 shift
                 ;;
-            --lzip)
-                compression="lzip"
-                shift
-                ;;
-            --lzop)
-                compression="lzop"
-                shift
-                ;;
             -h|--help)
                 show_help
                 ;;
