@@ -1,9 +1,5 @@
 #!/bin/bash
 handleParams(){
-    
-        
-    
-
     while [[ $# -gt 0 ]]; do
         case $1 in
             -[a-zA-Z]*)
@@ -11,10 +7,10 @@ handleParams(){
                     opt="${1:i:1}"
                     case "$opt" in 
                         j)
-                            filter="bzip2"
+                            compression="bzip2"
                             ;;
                         J)
-                            filter="xz"
+                            compression="xz"
                             ;;
                         q)
                             quiet=true
@@ -38,19 +34,19 @@ handleParams(){
                 shift
                 ;;
             -j|--bzip2)
-                filter="bzip2"
+                compression="bzip2"
                 shift
                 ;;
             -J|--xz)
-                filter="xz"
+                compression="xz"
                 shift
                 ;;
             --lzip)
-                filter="lzip"
+                compression="lzip"
                 shift
                 ;;
             --lzop)
-                filter="lzop"
+                compression="lzop"
                 shift
                 ;;
             -h|--help)
