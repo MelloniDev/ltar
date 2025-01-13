@@ -1,8 +1,6 @@
 
 openTarball(){
     inputFile=$1
-    
-    tar -xf "$inputFile"
-   
+    outputFolder=$2
+    tar -xf "$inputFile" "$outputFolder"
 }
-openTarball $1
