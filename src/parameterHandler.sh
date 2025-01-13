@@ -26,11 +26,11 @@ handleParams(){
                 shift
                 ;;
             -x)
-                output="extract"
+                action="extract"
                 shift
                 ;;
             -c)
-                output="create"
+                action="create"
                 shift
                 ;;
             -j|--bzip2)
