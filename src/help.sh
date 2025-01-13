@@ -8,5 +8,7 @@ help_prompt(){
           --lzop        Archiv durch lzop filtern
       -h, --help        Gibt Hilfe zum Tool aus
       -q, --quiet       Unterdrückt Ausgabe von Informationen
+      -x                Die Datei wird extrahiert
+      -c                Eine Datei wird erstellt
     "
 }
