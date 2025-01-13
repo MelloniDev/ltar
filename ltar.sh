@@ -18,6 +18,7 @@ compression="none"
 ddOutputPath="$tempDir/$output"
 
 
-echo $(getFilesSize ${files[@]})
+ddOutputSize=$(getFilesSize ${files[@]})
 
 
+echo "$ddOutputSize"
