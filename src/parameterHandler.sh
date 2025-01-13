@@ -1,15 +1,8 @@
 #!/bin/bash
 handleParams(){
-    case $1 in 
-        -x)
-        output="extract"
-        shift
-        ;;
-        -c)
-        output="create"
-        shift
-        ;;
-    esac
+    
+        
+    
 
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -26,9 +19,21 @@ handleParams(){
                         q)
                             quiet=true
                             ;;
+                        x)
+                            output="extract"
+                            ;;
+                        c)
+                            output="create"
+                            ;;
                     esac
                 done
                 shift
+                ;;
+            -x)
+                output="extract"
+                ;;
+            -c)
+                output="create"
                 ;;
             -j|--bzip2)
                 filter="bzip2"
