@@ -26,10 +26,10 @@ handleParams(){
                         q)
                             quiet=true
                             ;;
-                        
-
-
-
+                    esac
+                done
+                shift
+                ;;
             -j|--bzip2)
                 filter="bzip2"
                 shift
