@@ -15,11 +15,8 @@ compression="none"
 
 # handleParams $@
 
-if [[ "$compression" == "none" ]]; then
-    ddOutputPath="$output"
-else
-    ddOutputPath="$tempDir/$output"
-fi
+ddOutputPath="$tempDir/$output"
+
 
 echo $(getFilesSize ${files[@]})
 
