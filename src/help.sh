@@ -1,5 +1,5 @@
 #!/bin/bash
-help-prompt(){
+help_prompt(){
     echo "Aufruf: ./ltar [OPTION]... [DATEI/ORDNER]
     Verschlüsselung und Komprimierung von Dateien oder Verzeichnissen mithilfe von LUKS
       -j, --bzip2       Archiv durch bzip2 filtern
@@ -10,5 +10,3 @@ help-prompt(){
       -q, --quiet       Unterdrückt Ausgabe von Informationen
     "
 }
-
-help-prompt
