@@ -31,9 +31,11 @@ handleParams(){
                 ;;
             -x)
                 output="extract"
+                shift
                 ;;
             -c)
                 output="create"
+                shift
                 ;;
             -j|--bzip2)
                 filter="bzip2"
