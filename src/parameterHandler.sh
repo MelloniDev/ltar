@@ -26,11 +26,11 @@ handleParams(){
                 shift
                 ;;
             -x)
-                output="extract"
+                action="extract"
                 shift
                 ;;
             -c)
-                output="create"
+                action="create"
                 shift
                 ;;
             -j|--bzip2)
@@ -39,14 +39,6 @@ handleParams(){
                 ;;
             -J|--xz)
                 compression="xz"
-                shift
-                ;;
-            --lzip)
-                compression="lzip"
-                shift
-                ;;
-            --lzop)
-                compression="lzop"
                 shift
                 ;;
             -h|--help)
