@@ -29,11 +29,14 @@ else
 fi
 
 
+
 # handleParams $@
 
-
+passwordFilePath="/tmp/ltar.txt"
 ddOutputPath="ddOutput"
 
+touch "$passwordFilePath"
+echo "$luksPassword" > /tmp/ltar.txt
 
 ddOutputSize=$(getFilesSize ${files[@]})
 
@@ -57,9 +60,9 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputFile
+sudo cryptsetup luksFormat $ddOutputFile --key-file "$passwordFilePath"
 
-sudo cryptsetup open $ddOutputFile $LUKS_NAME
+sudo cryptsetup open $ddOutputFile $LUKS_NAME --key-file "$passwordFilePath"
 
 sudo mkfs.ext4 /dev/mapper/$LUKS_NAME
 
