@@ -1,3 +1,5 @@
+#!/bin/bash
+
 createTarball(){
     compression="$1"
     output=$2

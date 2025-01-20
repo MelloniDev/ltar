@@ -1,4 +1,4 @@
-
+#!/bin/bash
 openTarball(){
     inputFile=$1
     outputFolder=$2
