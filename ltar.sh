@@ -52,8 +52,8 @@ cd $tempDir
 ddLoadingBar $ddOutputPath $ddOutputSize &
 dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
 
-LUKS_NAME="itar_drive"           
-MOUNT_POINT="/tmp/itar"        
+luksName="itar_drive"           
+mountPoint="/tmp/itar"        
 
 if [ ! -f "$ddOutputFile" ]; then
     echo "Die Datei $ddOutputFile existiert nicht. Bitte überprüfen Sie den Pfad."
@@ -66,9 +66,16 @@ fi
 
 sudo cryptsetup luksFormat $ddOutputFile --key-file "$passwordFilePath"
 
-sudo cryptsetup open $ddOutputFile $LUKS_NAME --key-file "$passwordFilePath"
+sudo cryptsetup open $ddOutputFile $luksName --key-file "$passwordFilePath"
 
-sudo mkfs.ext4 /dev/mapper/$LUKS_NAME
+sudo mkfs.ext4 /dev/mapper/$luksName
 
-mkdir -p $MOUNT_POINT
-sudo mount /dev/mapper/$LUKS_NAME $MOUNT_POINT    
+mkdir -p $mountPoint
+sudo mount /dev/mapper/$luksName $mountPoint    
+
+cp "$files" "$mountPoint"
+
+sudo unmount $mountPoint
+sudo cryptsetup close $luksName
+
+source ./src/createTarball.sh $compression $output $ddOutputPath
