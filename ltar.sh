@@ -44,3 +44,24 @@ ddOutputSize=$(($ddOutputSize + 1000))
 
 cd $tempDir
 dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
+
+LUKS_NAME="itar_drive"           
+MOUNT_POINT="/tmp/itar"        
+
+if [ ! -f "$ddOutputFile" ]; then
+    echo "Die Datei $ddOutputFile existiert nicht. Bitte überprüfen Sie den Pfad."
+    exit 1
+fi
+
+if [ "$EUID" -ne 0 ]; then
+        sudo echo -ne ""
+fi
+
+sudo cryptsetup luksFormat $ddOutputFile
+
+sudo cryptsetup open $ddOutputFile $LUKS_NAME
+
+sudo mkfs.ext4 /dev/mapper/$LUKS_NAME
+
+mkdir -p $MOUNT_POINT
+sudo mount /dev/mapper/$LUKS_NAME $MOUNT_POINT    
