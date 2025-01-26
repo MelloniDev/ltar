@@ -12,7 +12,7 @@ Using malscent's !["bash_bundler"](https://github.com/malscent/bash_bundler"bash
 
 run with 
 ```
-./build/ltar.sh [OPTION]... [DATEI/ORDNER]
+./build/ltar.sh [OPTION]... [Output] [Dateien]
     Verschlüsselung und Komprimierung von Dateien oder Verzeichnissen mithilfe von LUKS
       -j, --bzip2       Archiv mit bzip2 komprimieren
       -J, --xz          Archiv mit xz komprimieren 
