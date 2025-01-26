@@ -4,7 +4,7 @@ With LUKS encrypted tar-balls
 
 ### Run
 
-Using malscent's !["bash_bundler"](https://github.com/malscent/bash_bundler"bash_bundler")
+Using malscent's !["bash_bundler"](https://github.com/malscent/bash_bundler)
 
 ```sh
 ./bundle.sh
