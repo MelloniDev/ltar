@@ -30,76 +30,88 @@ echo $consoleOutput
 
 echo $output
 
-echo -n "Please enter your password: "
-read -s luksPassword
-echo ""
 
-echo -n "Please repeat your password: "
-read -s luksPasswordVerify
-echo ""
 
-if [[ "$luksPassword" == "$luksPasswordVerify" ]]; then
-    echo "$luksPassword"
-else
-    echo "Passwords didn't match"
+if [[ "$action" == "create" ]]; then
+
+    echo -n "Please enter your password:" 
+    read -s luksPassword
+    echo ""
+    
+    echo -n "Please repeat your password: "
+    read -s luksPasswordVerify
+    echo ""
+
+    if [[ "$luksPassword" == "$luksPasswordVerify" ]]; then
+        echo "$luksPassword"
+    else
+        echo "Passwords didn't match"
+    fi
+
+
+
+
+
+    passwordFilePath="/tmp/ltar.txt"
+    touch "$passwordFilePath"
+    echo "$luksPassword" > /tmp/ltar.txt
+
+
+    ddOutputPath="$tempDir/ddOutput"
+
+    # echo "$ddOutputPath"
+
+
+
+    ddOutputSize=$(getFilesSize ${files[@]})
+
+
+    # echo "$ddOutputSize"
+
+    ddOutputSize=$(($ddOutputSize + 30000))
+
+    cd $tempDir
+    # ddLoadingBar $ddOutputPath $ddOutputSize &
+    dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1 &> $consoleOutput 
+
+    luksName="itar_drive"           
+    mountPoint="/tmp/itar"        
+
+    if [ ! -f "$ddOutputPath" ]; then
+        echo "Die Datei $ddOutputPath existiert nicht. Bitte überprüfen Sie den Pfad."
+        exit 1
+    fi
+
+    if [ ! -d "$mountPoint" ]; then
+        mkdir $mountPoint
+    fi
+
+    if [ "$EUID" -ne 0 ]; then
+            sudo echo -ne ""
+    fi
+
+    sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" <<< "YES" > $consoleOutput
+
+    sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" > $consoleOutput
+
+    sudo mkfs.ext4 /dev/mapper/$luksName &> $consoleOutput
+
+    mkdir -p $mountPoint
+    sudo mount /dev/mapper/$luksName $mountPoint    
+
+    cd $workDir
+
+    sudo cp -r "$files" "$mountPoint"
+
+    sudo umount $mountPoint
+    sudo cryptsetup close $luksName
+
+    createTarball $compression $output $ddOutputPath
+elif [[ "$action" == "open" ]]; then
+    openLtarFile
 fi
 
 
-
-
-
-passwordFilePath="/tmp/ltar.txt"
-ddOutputPath="$tempDir/ddOutput"
-
-# echo "$ddOutputPath"
-
-touch "$passwordFilePath"
-echo "$luksPassword" > /tmp/ltar.txt
-
-ddOutputSize=$(getFilesSize ${files[@]})
-
-
-# echo "$ddOutputSize"
-
-ddOutputSize=$(($ddOutputSize + 30000))
-
-cd $tempDir
-# ddLoadingBar $ddOutputPath $ddOutputSize &
-dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1 &> $consoleOutput 
-
-luksName="itar_drive"           
-mountPoint="/tmp/itar"        
-
-if [ ! -f "$ddOutputPath" ]; then
-    echo "Die Datei $ddOutputPath existiert nicht. Bitte überprüfen Sie den Pfad."
-    exit 1
-fi
-
-if [ ! -d "$mountPoint" ]; then
-    mkdir $mountPoint
-fi
-
-if [ "$EUID" -ne 0 ]; then
-        sudo echo -ne ""
-fi
-
-sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" <<< "YES" > $consoleOutput
-
-sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" > $consoleOutput
-
-sudo mkfs.ext4 /dev/mapper/$luksName &> $consoleOutput
-
-mkdir -p $mountPoint
-sudo mount /dev/mapper/$luksName $mountPoint    
-
-cd $workDir
-
-sudo cp -r "$files" "$mountPoint"
-
-sudo umount $mountPoint
-sudo cryptsetup close $luksName
-
-createTarball $compression $output $ddOutputPath
 
 openLtarFile(){
 
