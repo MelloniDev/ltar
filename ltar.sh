@@ -5,6 +5,7 @@ source ./src/parameterHandler.sh
 source ./src/getFilesSize.sh
 source ./src/ddLoadingBar.sh
 source ./src/createTarBall.sh 
+source ./src/openTarBall.sh
 
 tempDir="/tmp"
 
@@ -97,3 +98,34 @@ sudo umount $mountPoint
 sudo cryptsetup close $luksName
 
 createTarball $compression $output $ddOutputPath
+
+openLtarFile(){
+
+    openTarBall $1 ./
+
+    echo -n "Please enter your password: "
+    read -s luksPassword
+    echo ""
+
+    passwordFilePath="/tmp/ltar_temp.txt"
+    touch "$passwordFilePath"
+    echo "$luksPassword" > "$passwordFilePath"
+
+    luksName="itar_drive"
+    sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+
+    mountPoint="/tmp/itar"
+    mkdir -p $mountPoint
+    sudo mount /dev/mapper/$luksName $mountPoint
+
+    outputDir="$1"
+    if [ ! -d "$outputDir" ]; then
+        mkdir -p "$outputDir"
+    fi
+    cp -r $mountPoint/* "$outputDir"
+
+    sudo umount $mountPoint
+    sudo cryptsetup close $luksName
+
+    rm "$passwordFilePath"
+}
