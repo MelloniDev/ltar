@@ -1,5 +1,6 @@
 handleParams() {
     files_or_dirs=() 
+    output=""
     while [[ $# -gt 0 ]]; do
         case $1 in
             -h|--help)
