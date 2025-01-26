@@ -4,27 +4,19 @@ source ./src/help.sh
 source ./src/parameterHandler.sh
 source ./src/getFilesSize.sh
 source ./src/ddLoadingBar.sh
-source ./src/createTarball.sh 
+source ./src/createTarBall.sh
 
 tempDir="/tmp"
 
 files=("./testing/files")
 output="./testing/test.ltar"
+verbose=0
 compression="none"
 action="create"
-quiet="no"
 
 handleParams $@
 
-
-# handle quiet option
-
-if [[ "$quiet" == "yes" ]]; then
-    consoleOutput="/dev/null"
-else
-   consoleOutput="/dev/tty"
-fi
-
+echo $output
 
 echo -n "Please enter your password: "
 read -s luksPassword
@@ -57,11 +49,11 @@ ddOutputSize=$(getFilesSize ${files[@]})
 
 # echo "$ddOutputSize"
 
-ddOutputSize=$(($ddOutputSize + 1000))
+ddOutputSize=$(($ddOutputSize + 10000))
 
 cd $tempDir
 ddLoadingBar $ddOutputPath $ddOutputSize &
-dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1 1> $consoleOutput 
+dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
 
 luksName="itar_drive"           
 mountPoint="/tmp/itar"        
@@ -79,11 +71,11 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputFile --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath"
 
-sudo cryptsetup open $ddOutputFile $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath"
 
-sudo mkfs.ext4 /dev/mapper/$luksName 1> $consoleOutput
+sudo mkfs.ext4 /dev/mapper/$luksName
 
 mkdir -p $mountPoint
 sudo mount /dev/mapper/$luksName $mountPoint    
