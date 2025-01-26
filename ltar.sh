@@ -59,7 +59,7 @@ ddOutputSize=$(getFilesSize ${files[@]})
 ddOutputSize=$(($ddOutputSize + 30000))
 
 cd $tempDir
-ddLoadingBar $ddOutputPath $ddOutputSize &
+# ddLoadingBar $ddOutputPath $ddOutputSize &
 dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
 
 luksName="itar_drive"           
@@ -78,7 +78,7 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath"
 
 sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
@@ -89,7 +89,7 @@ sudo mount /dev/mapper/$luksName $mountPoint
 
 cp "$files" "$mountPoint"
 
-sudo unmount $mountPoint
+sudo umount $mountPoint
 sudo cryptsetup close $luksName
 
 createTarball $compression $output $ddOutputPath
