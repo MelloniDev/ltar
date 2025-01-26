@@ -8,6 +8,8 @@ source ./src/createTarBall.sh
 
 tempDir="/tmp"
 
+workDir="$PWD"
+echo "$workDir"
 files=("./testing/files")
 output="./testing/test.ltar"
 compression="none"
@@ -86,6 +88,8 @@ sudo mkfs.ext4 /dev/mapper/$luksName
 
 mkdir -p $mountPoint
 sudo mount /dev/mapper/$luksName $mountPoint    
+
+cd $workDir
 
 cp "$files" "$mountPoint"
 
