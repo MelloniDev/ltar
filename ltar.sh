@@ -19,11 +19,13 @@ quiet="no"
 handleParams $@
 
 
-if [[ "$quiet" -eq "true" ]]; then
-    consoleOutput="/dev/null"
+if [[ "$quiet" == "true" ]]; then
+    consoleOutput=/dev/null
 else
-    consoleOutput="/dev/tty"
+    consoleOutput=/dev/tty
 fi
+
+echo $consoleOutput
 
 echo $output
 
@@ -62,7 +64,7 @@ ddOutputSize=$(($ddOutputSize + 30000))
 
 cd $tempDir
 # ddLoadingBar $ddOutputPath $ddOutputSize &
-dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
+dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1 &> $consoleOutput 
 
 luksName="itar_drive"           
 mountPoint="/tmp/itar"        
@@ -80,18 +82,18 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" <<< "YES" 1> $consoleOutput
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" <<< "YES" > $consoleOutput
 
-sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" > $consoleOutput
 
-sudo mkfs.ext4 /dev/mapper/$luksName
+sudo mkfs.ext4 /dev/mapper/$luksName &> $consoleOutput
 
 mkdir -p $mountPoint
 sudo mount /dev/mapper/$luksName $mountPoint    
 
 cd $workDir
 
-cp "$files" "$mountPoint"
+sudo cp -r "$files" "$mountPoint"
 
 sudo umount $mountPoint
 sudo cryptsetup close $luksName

@@ -20,9 +20,9 @@ createTarball(){
     esac
     
     if [ -z "$compressionOption" ]; then
-        tar -cf "$output" "$ddOutputPath"
+        tar -cf "$output" "$ddOutputPath" &> $consoleOutput
     else
-        tar $compressionOption -cf "$output" "$ddOutputPath"
+        tar $compressionOption -cf "$output" "$ddOutputPath" &> $consoleOutput
     fi
 }
 # createTarball $1 $2 $3
