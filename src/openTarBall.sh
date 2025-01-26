@@ -1,5 +1,5 @@
 #!/bin/bash
 openTarBall(){
     inputFile=$1
-    tar -xf "$inputFile" 
+    tar -xf "$inputFile" &> $consoleOutput 
 }
