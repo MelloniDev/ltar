@@ -10,7 +10,6 @@ source ./src/openTarBall.sh
 tempDir="/tmp"
 
 workDir="$PWD"
-echo "$workDir"
 files=("./testing/files")
 output="./testing/test.ltar"
 compression="none"
@@ -24,10 +23,6 @@ if [[ "$quiet" == "true" ]]; then
 else
     consoleOutput=/dev/tty
 fi
-
-echo $consoleOutput
-
-echo $output
 
 if [[ "$action" == "create" ]]; then
 
@@ -43,6 +38,7 @@ if [[ "$action" == "create" ]]; then
         echo "$luksPassword"
     else
         echo "Passwords didn't match"
+        exit 1
     fi
 
     passwordFilePath="/tmp/ltar.txt"
@@ -51,17 +47,11 @@ if [[ "$action" == "create" ]]; then
 
     ddOutputPath="$tempDir/ddOutput"
 
-    # echo "$ddOutputPath"
-
     ddOutputSize=$(getFilesSize ${files[@]})
-
-
-    # echo "$ddOutputSize"
 
     ddOutputSize=$(($ddOutputSize + 30000))
 
     cd $tempDir
-    # ddLoadingBar $ddOutputPath $ddOutputSize &
     dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1 &> $consoleOutput 
 
     luksName="itar_drive"           
@@ -99,8 +89,6 @@ if [[ "$action" == "create" ]]; then
     createTarball $compression $output $ddOutputPath
 elif [[ "$action" == "extract" ]]; then
 
-    
-
     tarPath="/tmp/ltar-extract"
     if [ ! -d "$tarPath" ]; then
         mkdir $tarPath
@@ -111,9 +99,13 @@ elif [[ "$action" == "extract" ]]; then
     fi
 
     sudo cp "${files[0]}" $tarPath
+
     cd $tarPath
+
     openTarBall "${files[0]}" $tarPath
+
     cd $workDir
+
     echo -n "Please enter your password: "
     read -s luksPassword
     echo ""
@@ -122,7 +114,6 @@ elif [[ "$action" == "extract" ]]; then
     touch "$passwordFilePath"
 
     echo $luksPassword > $passwordFilePath
-
 
     luksName="itar_drive"
     sudo cryptsetup open $tarPath/tmp/ddOutput $luksName --key-file "$passwordFilePath" 1> $consoleOutput
@@ -141,5 +132,5 @@ elif [[ "$action" == "extract" ]]; then
     sudo cryptsetup close $luksName
 
     rm "$passwordFilePath"
-    
+    rm -rf "$tarPath"
 fi
