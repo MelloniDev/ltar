@@ -4,11 +4,7 @@ source ./src/help.sh
 source ./src/parameterHandler.sh
 source ./src/getFilesSize.sh
 source ./src/ddLoadingBar.sh
-<<<<<<< HEAD
 source ./src/createTarBall.sh 
-=======
-source ./src/createTarBall.sh
->>>>>>> 6b12eae4b92114fcf02ae5c6fd86eaa13c7b9c1e
 
 tempDir="/tmp"
 
