@@ -1,4 +1,5 @@
 handleParams() {
+    files_or_dirs=() 
     while [[ $# -gt 0 ]]; do
         case $1 in
             -h|--help)
@@ -39,10 +40,10 @@ handleParams() {
                             quiet=true
                             ;;
                         x)
-                            output="extract"
+                            action="extract"
                             ;;
                         c)
-                            output="create"
+                            action="create"
                             ;;
                         *)
                             echo "Unbekannte Option: -$opt"
@@ -56,14 +57,16 @@ handleParams() {
                 shift
                 break
                 ;;
-            -*)
+            -* | --*)
                 echo "Unbekannte Option: $1"
                 exit 1
                 ;;
             *)
-                targets+=("$1")
+                files_or_dirs+=("$1")
                 shift
                 ;;
         esac
     done
+
+    files=("${files_or_dirs[@]}")
 }
