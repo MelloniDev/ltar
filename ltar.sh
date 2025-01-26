@@ -113,6 +113,7 @@ elif [[ "$action" == "extract" ]]; then
 
     passwordFilePath="/tmp/ltar_temp.txt"
     touch "$passwordFilePath"
+    $luksPassword > $passwordFilePath
 
     luksName="itar_drive"
     sudo cryptsetup open $tarPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
