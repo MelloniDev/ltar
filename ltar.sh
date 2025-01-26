@@ -17,7 +17,7 @@ quiet="no"
 handleParams $@
 
 
-if [[ "$quiet" -eq "yes" ]]; then
+if [[ "$quiet" -eq "true" ]]; then
     consoleOutput="/dev/null"
 else
     consoleOutput="/dev/tty"
@@ -78,7 +78,7 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath"
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" <<< "YES" 1> $consoleOutput
 
 sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
