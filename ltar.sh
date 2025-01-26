@@ -3,8 +3,9 @@
 source ./src/help.sh
 #source ./src/handleParams.sh
 source ./src/getFilesSize.sh
+source ./src/ddLoadingBar.sh
 
-tempDir="./testing"
+tempDir="/tmp"
 
 files=("./testing/files")
 output="./testing/test.ltar"
@@ -33,7 +34,9 @@ fi
 # handleParams $@
 
 passwordFilePath="/tmp/ltar.txt"
-ddOutputPath="ddOutput"
+ddOutputPath="$tempDir/ddOutput"
+
+# echo "$ddOutputPath"
 
 touch "$passwordFilePath"
 echo "$luksPassword" > /tmp/ltar.txt
@@ -41,11 +44,12 @@ echo "$luksPassword" > /tmp/ltar.txt
 ddOutputSize=$(getFilesSize ${files[@]})
 
 
-echo "$ddOutputSize"
+# echo "$ddOutputSize"
 
 ddOutputSize=$(($ddOutputSize + 1000))
 
 cd $tempDir
+ddLoadingBar $ddOutputPath $ddOutputSize &
 dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
 
 luksName="itar_drive"           
