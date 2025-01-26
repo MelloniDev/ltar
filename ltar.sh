@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./src/help.sh
-#source ./src/handleParams.sh
+source ./src/parameterHandler.sh
 source ./src/getFilesSize.sh
 source ./src/ddLoadingBar.sh
 
@@ -12,6 +12,8 @@ output="./testing/test.ltar"
 verbose=0
 compression="none"
 action="create"
+
+handleParams $@
 
 
 
@@ -31,7 +33,7 @@ fi
 
 
 
-# handleParams $@
+
 
 passwordFilePath="/tmp/ltar.txt"
 ddOutputPath="$tempDir/ddOutput"

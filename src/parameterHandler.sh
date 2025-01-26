@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# source ./src/help.sh
+
+
 handleParams(){
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -42,7 +46,7 @@ handleParams(){
                 shift
                 ;;
             -h|--help)
-                show_help
+                help_prompt
                 ;;
             -q|--quiet)
                 quiet=true
