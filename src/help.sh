@@ -1,6 +1,6 @@
 #!/bin/bash
 help_prompt(){
-    echo "Aufruf: ./ltar [OPTION]... [DATEI/ORDNER]
+    echo "Aufruf: ./ltar [OPTION]... [Output] [Dateien]
     Verschlüsselung und Komprimierung von Dateien oder Verzeichnissen mithilfe von LUKS
       -j, --bzip2       Archiv mit bzip2 komprimieren
       -J, --xz          Archiv mit xz komprimieren 
