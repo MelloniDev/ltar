@@ -62,7 +62,11 @@ handleParams() {
                 exit 1
                 ;;
             *)
-                files_or_dirs+=("$1")
+                if [[ -z $output ]]; then
+                    output="$1"
+                else
+                    files_or_dirs+=("$1")
+                fi
                 shift
                 ;;
         esac

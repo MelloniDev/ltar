@@ -57,12 +57,12 @@ dd if=/dev/zero of="$ddOutputPath" bs="$ddOutputSize"K count=1
 luksName="itar_drive"           
 mountPoint="/tmp/itar"        
 
-if [ ! -f "$ddOutputFile" ]; then
-    echo "Die Datei $ddOutputFile existiert nicht. Bitte überprüfen Sie den Pfad."
+if [ ! -f "$ddOutputPath" ]; then
+    echo "Die Datei $ddOutputPath existiert nicht. Bitte überprüfen Sie den Pfad."
     exit 1
 fi
 
-if [ ! -d "$mountPoint"]; then
+if [ ! -d "$mountPoint" ]; then
     mkdir $mountPoint
 fi
 
@@ -70,9 +70,9 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputFile --key-file "$passwordFilePath"
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath"
 
-sudo cryptsetup open $ddOutputFile $luksName --key-file "$passwordFilePath"
+sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath"
 
 sudo mkfs.ext4 /dev/mapper/$luksName
 
