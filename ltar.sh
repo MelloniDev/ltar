@@ -19,7 +19,6 @@ quiet="no"
 
 handleParams $@
 
-
 if [[ "$quiet" == "true" ]]; then
     consoleOutput=/dev/null
 else
@@ -29,8 +28,6 @@ fi
 echo $consoleOutput
 
 echo $output
-
-
 
 if [[ "$action" == "create" ]]; then
 
@@ -48,20 +45,13 @@ if [[ "$action" == "create" ]]; then
         echo "Passwords didn't match"
     fi
 
-
-
-
-
     passwordFilePath="/tmp/ltar.txt"
     touch "$passwordFilePath"
     echo "$luksPassword" > /tmp/ltar.txt
 
-
     ddOutputPath="$tempDir/ddOutput"
 
     # echo "$ddOutputPath"
-
-
 
     ddOutputSize=$(getFilesSize ${files[@]})
 
@@ -107,32 +97,31 @@ if [[ "$action" == "create" ]]; then
     sudo cryptsetup close $luksName
 
     createTarball $compression $output $ddOutputPath
-elif [[ "$action" == "open" ]]; then
-    openLtarFile
-fi
+elif [[ "$action" == "extract" ]]; then
 
-
-
-openLtarFile(){
-
-    openTarBall $1 ./
-
+    tarPath="/tmp/ltar-extract"
+    if [ ! -d "$tarPath" ]; then
+        mkdir $tarPath
+    fi
+    cp  "${files[0]}" $tarPath
+    cd $tarPath
+    openTarBall "${files[0]}" $tarPath 
+    cd $workDir
     echo -n "Please enter your password: "
     read -s luksPassword
     echo ""
 
     passwordFilePath="/tmp/ltar_temp.txt"
     touch "$passwordFilePath"
-    echo "$luksPassword" > "$passwordFilePath"
 
     luksName="itar_drive"
-    sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+    sudo cryptsetup open $tarPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
     mountPoint="/tmp/itar"
     mkdir -p $mountPoint
     sudo mount /dev/mapper/$luksName $mountPoint
 
-    outputDir="$1"
+    outputDir="$output"
     if [ ! -d "$outputDir" ]; then
         mkdir -p "$outputDir"
     fi
@@ -142,4 +131,5 @@ openLtarFile(){
     sudo cryptsetup close $luksName
 
     rm "$passwordFilePath"
-}
+    rm -rf "$tarPath"
+fi
