@@ -4,7 +4,7 @@ source ./src/help.sh
 source ./src/parameterHandler.sh
 source ./src/getFilesSize.sh
 source ./src/ddLoadingBar.sh
-source ./src/createTarball.sh 
+source ./src/createTarBall.sh 
 
 tempDir="/tmp"
 
@@ -57,7 +57,7 @@ ddOutputSize=$(getFilesSize ${files[@]})
 
 # echo "$ddOutputSize"
 
-ddOutputSize=$(($ddOutputSize + 1000))
+ddOutputSize=$(($ddOutputSize + 30000))
 
 cd $tempDir
 ddLoadingBar $ddOutputPath $ddOutputSize &
@@ -79,9 +79,9 @@ if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
 
-sudo cryptsetup luksFormat $ddOutputFile --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup luksFormat $ddOutputPath --key-file "$passwordFilePath" 1> $consoleOutput
 
-sudo cryptsetup open $ddOutputFile $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
 sudo mkfs.ext4 /dev/mapper/$luksName 1> $consoleOutput
 

@@ -25,4 +25,4 @@ createTarball(){
         tar $compressionOption -cf "$output" "$ddOutputPath"
     fi
 }
-createTarball $1 $2 $3
+# createTarball $1 $2 $3
