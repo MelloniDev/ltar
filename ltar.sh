@@ -10,11 +10,18 @@ tempDir="/tmp"
 
 files=("./testing/files")
 output="./testing/test.ltar"
-verbose=0
 compression="none"
 action="create"
+quiet="no"
 
 handleParams $@
+
+
+if [[ "$quiet" -eq "yes" ]]; then
+    consoleOutput="/dev/null"
+else
+    consoleOutput="/dev/tty"
+fi
 
 echo $output
 
