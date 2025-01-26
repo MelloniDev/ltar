@@ -99,13 +99,20 @@ if [[ "$action" == "create" ]]; then
     createTarball $compression $output $ddOutputPath
 elif [[ "$action" == "extract" ]]; then
 
+    
+
     tarPath="/tmp/ltar-extract"
     if [ ! -d "$tarPath" ]; then
         mkdir $tarPath
     fi
-    cp  "${files[0]}" $tarPath
+
+    if [ "$EUID" -ne 0 ]; then
+        sudo echo -ne ""
+    fi
+
+    sudo cp "${files[0]}" $tarPath
     cd $tarPath
-    openTarBall "${files[0]}" $tarPath 
+    openTarBall "${files[0]}" $tarPath
     cd $workDir
     echo -n "Please enter your password: "
     read -s luksPassword
@@ -113,10 +120,12 @@ elif [[ "$action" == "extract" ]]; then
 
     passwordFilePath="/tmp/ltar_temp.txt"
     touch "$passwordFilePath"
-    $luksPassword > $passwordFilePath
+
+    echo $luksPassword > $passwordFilePath
+
 
     luksName="itar_drive"
-    sudo cryptsetup open $tarPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+    sudo cryptsetup open $tarPath/tmp/ddOutput $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
     mountPoint="/tmp/itar"
     mkdir -p $mountPoint
@@ -126,11 +135,11 @@ elif [[ "$action" == "extract" ]]; then
     if [ ! -d "$outputDir" ]; then
         mkdir -p "$outputDir"
     fi
-    cp -r $mountPoint/* "$outputDir"
+    sudo cp -r $mountPoint/* "$outputDir"
 
     sudo umount $mountPoint
     sudo cryptsetup close $luksName
 
     rm "$passwordFilePath"
-    rm -rf "$tarPath"
+    
 fi
