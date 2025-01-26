@@ -56,6 +56,10 @@ if [ ! -f "$ddOutputFile" ]; then
     exit 1
 fi
 
+if [ ! -d "$mountPoint"]; then
+    mkdir $mountPoint
+fi
+
 if [ "$EUID" -ne 0 ]; then
         sudo echo -ne ""
 fi
