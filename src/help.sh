@@ -9,4 +9,5 @@ help_prompt(){
       -x                Die Datei wird extrahiert
       -c                Eine Datei wird erstellt
     "
+    exit
 }
