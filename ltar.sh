@@ -19,7 +19,6 @@ quiet="no"
 
 handleParams $@
 
-
 if [[ "$quiet" == "true" ]]; then
     consoleOutput=/dev/null
 else
@@ -29,8 +28,6 @@ fi
 echo $consoleOutput
 
 echo $output
-
-
 
 if [[ "$action" == "create" ]]; then
 
@@ -48,20 +45,13 @@ if [[ "$action" == "create" ]]; then
         echo "Passwords didn't match"
     fi
 
-
-
-
-
     passwordFilePath="/tmp/ltar.txt"
     touch "$passwordFilePath"
     echo "$luksPassword" > /tmp/ltar.txt
 
-
     ddOutputPath="$tempDir/ddOutput"
 
     # echo "$ddOutputPath"
-
-
 
     ddOutputSize=$(getFilesSize ${files[@]})
 
@@ -108,14 +98,19 @@ if [[ "$action" == "create" ]]; then
 
     createTarball $compression $output $ddOutputPath
 elif [[ "$action" == "open" ]]; then
-    openLtarFile
+    openLtarFile $output "${files[0]}"
 fi
 
 
 
 openLtarFile(){
 
-    openTarBall $1 ./
+    tarPath="/tmp/test"
+    if [ ! -d "$tarPath" ]; then
+        mkdir $tarPath
+    fi
+
+    openTarBall $2 $tarPath 
 
     echo -n "Please enter your password: "
     read -s luksPassword
@@ -126,7 +121,7 @@ openLtarFile(){
     echo "$luksPassword" > "$passwordFilePath"
 
     luksName="itar_drive"
-    sudo cryptsetup open $ddOutputPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
+    sudo cryptsetup open $tarPath $luksName --key-file "$passwordFilePath" 1> $consoleOutput
 
     mountPoint="/tmp/itar"
     mkdir -p $mountPoint
